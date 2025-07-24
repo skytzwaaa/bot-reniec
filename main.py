@@ -16,17 +16,23 @@ def consultar_dni(dni):
     else:
         return "❌ Error al consultar el DNI."
 
+def buscar_por_nombre(nombre):
+    # Simulación, ya que la API no lo permite por nombre
+    return f"🔍 Buscaste: {nombre}\n⚠️ Actualmente solo está disponible la búsqueda por DNI."
+
 @bot.message_handler(commands=["start"])
 def enviar_bienvenida(mensaje):
-    bot.reply_to(mensaje, "👋 ¡Hola! Envía un DNI para buscar datos.")
+    bot.reply_to(mensaje, "👋 ¡Hola! Envía un *DNI* o *nombre completo* para buscar datos.")
 
 @bot.message_handler(func=lambda m: True)
 def manejar_mensaje(mensaje):
-    dni = mensaje.text.strip()
-    if dni.isdigit() and len(dni) == 8:
-        resultado = consultar_dni(dni)
-        bot.reply_to(mensaje, resultado, parse_mode="Markdown")
+    texto = mensaje.text.strip()
+
+    if texto.isdigit() and len(texto) == 8:
+        resultado = consultar_dni(texto)
     else:
-        bot.reply_to(mensaje, "❗ Por favor, envía un número de DNI válido (8 dígitos).")
+        resultado = buscar_por_nombre(texto)
+
+    bot.reply_to(mensaje, resultado, parse_mode="Markdown")
 
 bot.polling()
